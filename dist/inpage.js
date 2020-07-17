@@ -19,7 +19,9 @@ function response_inpage(data) {
   block.id = "adoperator_inp";
   block.className = "adoperator_inp";
   block.innerHTML =
-    '<span class="adoperator_inp--close" onclick=\'document.getElementById("adoperator_inp").classList.remove("adoperator_inp--active")\'>x</span><a href="#" target="_blank" rel="noopener noreferrer"><div class="adoperator_inp--img"></div><div class="adoperator_inp--desc"><p>' +
+    '<span class="adoperator_inp--close" onclick=\'document.getElementById("adoperator_inp").classList.remove("adoperator_inp--active")\'>x</span><a href="' +
+    data.click_url +
+    '" target="_blank" rel="noopener noreferrer"><div class="adoperator_inp--img"></div><div class="adoperator_inp--desc"><p>' +
     data.title +
     "</p><span>" +
     data.text +
@@ -30,14 +32,47 @@ function response_inpage(data) {
   }, 1000);
 }
 
-function request_inpage() {
+function adop_get_ip() {
   var xhr = new XMLHttpRequest();
+  xhr.open("GET", "//api.ipify.org/", false);
+
+  xhr.onreadystatechange = function () {
+    if (this.readyState === 4) {
+      if (this.status == 200 && this.responseText) {
+        try {
+          request_inpage(this.responseText);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    }
+  };
+
+  xhr.send();
+}
+
+function request_inpage(ip) {
+  var xhr = new XMLHttpRequest();
+
+  if (!adop_feedid || !adop_subid || !ip) {
+    return;
+  }
+
   xhr.open(
     "GET",
-    "//inpage.eu.adopexchange.com/rtb/search/push?ip=125.99.120.166&subId=10001&ua=Mozilla%2F5.0%20(X11%3B%20Linux%20x86_64)%20AppleWebKit%2F537.36%20(KHTML,%20like%20Gecko)%20Ubuntu%20Chromium%2F83.0.4103.61%20Chrome%2F83.0.4103.61%20Safari%2F537.36&format=json&feedid=e908&url=adop.com&keywords=best,price&domain=test.domain",
+    "//inpage.eu.adopexchange.com/rtb/search/push?ip=" +
+      ip +
+      "&subId=" +
+      adop_subid +
+      "&ua=" +
+      window.navigator.userAgent +
+      "&format=json&feedid=" +
+      adop_feedid +
+      "&url=" +
+      window.location.hostname +
+      "&keywords=best,price&domain=test.domain",
     true
   );
-  xhr.withCredentials = true;
 
   xhr.onreadystatechange = function () {
     if (this.readyState === 4) {
@@ -54,4 +89,4 @@ function request_inpage() {
 
   xhr.send();
 }
-request_inpage();
+adop_get_ip();
