@@ -48,7 +48,8 @@ function request_inpage(ip) {
     return;
   }
 
-  xhr.open("GET", "//inpage.eu.adopexchange.com/rtb/search/push?ip=" + ip + "&subId=" + adop_subid + "&ua=" + window.navigator.userAgent + "&format=json&feedid=" + adop_feedid + "&url=" + encodeURI(window.location.href) + "&keywords=best,price&domain=" + encodeURI(window.location.hostname), true);
+  xhr.setRequestHeader("X_FORWARD_IP", ip)
+  xhr.open("GET", "//inpage.eu.adopexchange.com/rtb/search/inpage?subId=" + adop_subid + "&ua=" + window.navigator.userAgent + "&format=json&feedid=" + adop_feedid + "&url=" + window.location.href + "&keywords=best,price&domain=" + window.location.hostname, true);
 
   xhr.onreadystatechange = function () {
     if (this.readyState === 4) {
