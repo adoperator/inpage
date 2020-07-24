@@ -41,14 +41,14 @@ function adop_get_ip() {
   xhr.send();
 }
 
-function request_inpage(ip) {
+function request_inpage() {
   var xhr = new XMLHttpRequest();
 
-  if (!adop_feedid || !adop_subid || !ip) {
+  if (!adop_feedid || !adop_subid) {
     return;
   }
 
-  xhr.open("GET", "//inpage.eu.adopexchange.com/rtb/search/push?ip=" + ip + "&subId=" + adop_subid + "&ua=" + window.navigator.userAgent + "&format=json&feedid=" + adop_feedid + "&url=" + encodeURI(window.location.href) + "&keywords=best,price&domain=" + encodeURI(window.location.hostname), true);
+  xhr.open("GET", "//inpage.eu.adopexchange.com/rtb/search/inpage?subId=" + adop_subid + "&ua=" + window.navigator.userAgent + "&format=json&feedid=" + adop_feedid + "&url=" + encodeURI(window.location.href) + "&keywords=best,price&domain=" + encodeURI(window.location.hostname), true);
 
   xhr.onreadystatechange = function () {
     if (this.readyState === 4) {
@@ -67,4 +67,4 @@ function request_inpage(ip) {
   xhr.send();
 }
 
-adop_get_ip();
+request_inpage();
