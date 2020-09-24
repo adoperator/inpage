@@ -159,7 +159,7 @@ export default class AdopInPagePush {
 
     xhr.open('GET', this.baseUrl + '/rtb/search/inpage?' + query, true)
 
-    xhr.onreadystatechange = function () {
+    xhr.onreadystatechange = () => {
       if (this.readyState === 4) {
         if (this.status == 200) {
           this.log(this.responseText)
