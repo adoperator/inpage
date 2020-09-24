@@ -3,15 +3,36 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Example</title>
+    <title>Example Publisher Code</title>
   </head>
 
   <body>
-    <script src="https://cdn.jsdelivr.net/gh/adoperator/inpage@1/dist/bundle.js"></script>
+    <!-- Your content -->
+    <!---->
+    <!---->
+
+    <!-- adoperator.com start -->
+    <script src="//cdn.jsdelivr.net/gh/adoperator/inpage@latest/dist/bundle.js"></script>
     <script>
       window.onload = function () {
-        AdopInPagePush({ feedId: 'p908', subId: '10001' })
+        AdopInPagePush({
+          // Issued by advertising network adoperator.com
+          feedId: 'p908', // required
+
+          // Site/App id
+          subId: '10001', // optional, default = 'test'
+
+          // Max number of push messages on page
+          count: 3, // optional, default = 3
+
+          // Delay before opening the first message
+          timeOutStart: 2, // optional, default = 3
+
+          // Delay before opening the next message
+          timeOutMessage: 5 // optional, default = 5
+        })
       }
     </script>
+    <!-- adoperator.com end -->
   </body>
 </html>
