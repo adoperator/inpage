@@ -144,7 +144,7 @@ export default class AdopInPagePush {
 
     var xhr = new XMLHttpRequest()
 
-    let query = this.http_build_query({
+    let query = {
       feedid: this.config.feedId,
       subId: this.config.subId,
       ua: this.config.ua,
@@ -153,19 +153,23 @@ export default class AdopInPagePush {
       keywords: 'best,price',
       url: this.config.url,
       domain: this.config.domain
-    })
+    }
 
     this.log(query)
 
+    query = this.http_build_query(query)
+
     xhr.open('GET', this.baseUrl + '/rtb/search/inpage?' + query, true)
 
-    xhr.onreadystatechange = () => {
-      if (this.readyState === 4) {
-        if (this.status == 200) {
-          this.log(this.responseText)
+    xhr.onreadystatechange = x => {
+      const response = x.target
+
+      if (response.readyState === 4) {
+        if (response.status == 200) {
+          this.log(response.responseText)
 
           try {
-            this.response(JSON.parse(this.responseText))
+            this.response(JSON.parse(response.responseText))
           } catch (error) {
             this.log(error)
           }
