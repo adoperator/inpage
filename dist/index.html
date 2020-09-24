@@ -17,7 +17,7 @@
       window.onload = function () {
         AdopInPagePush({
           // Issued by advertising network adoperator.com
-          feedId: 'p908', // required
+          feedId: 'd100', // required
 
           // Site/App id, displayed in reports
           subId: '10001', // optional, default = 'test'
@@ -26,13 +26,16 @@
           count: 3, // optional, default = 3
 
           // Delay before opening the first message
-          timeOutStart: 2, // optional, default = 3
+          timeOutStart: 2, // optional, default = 2
 
           // Delay before opening the next message
           timeOutMessage: 5 // optional, default = 5
         })
       }
+      // OR just minify code
+      // window.onload=function(){AdopInPagePush({feedId:"d100",subId:"10001"})};
     </script>
     <!-- adoperator.com end -->
+    
   </body>
 </html>
