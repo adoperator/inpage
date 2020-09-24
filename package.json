@@ -1,0 +1,21 @@
+{
+  "name": "adop-inpage",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "webpack --mode=production"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.11.6",
+    "@babel/core": "^7.11.6",
+    "@babel/preset-env": "^7.11.5",
+    "@types/core-js": "^2.5.4",
+    "babel-loader": "^8.1.0",
+    "babel-preset-minify": "^0.5.1",
+    "core-js": "^3.6.5",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^3.3.12"
+  }
+}
