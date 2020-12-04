@@ -126,7 +126,7 @@ export default class AdopInPagePush {
       <div class="adoperator_inp--img" style="background-image:url(${data.icon_url})"></div>
       <div class="adoperator_inp--desc">
       <p>${data.title}</p>
-      <span>${data.text}</span>
+      <span>${data.text || ''}</span>
       </div>
     </a>`
 
