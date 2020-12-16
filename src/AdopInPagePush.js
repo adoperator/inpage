@@ -237,6 +237,7 @@ export default class AdopInPagePush {
       height: 16px;
       width: 16px;
       font-size: 12px;
+      line-height: 14px;
       color: #fff;
       text-align: center;
       z-index: 99999;
@@ -251,7 +252,7 @@ export default class AdopInPagePush {
       background-size: contain;
       background-repeat: no-repeat;
       width: 72px;
-      height: 72px;
+      max-height: 72px;
       margin-right: 8px;
       display: inline-block;
       vertical-align: middle;
