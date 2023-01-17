@@ -2,18 +2,14 @@ export default class AdopInPagePush {
   constructor(params) {
     this.config = {
       debug: false,
+      zone: null,
       count: 3,
-      timeOutStart: 2,
-      timeOutMessage: 5,
-      feedId: null,
-      subId: location.hostname || 'test',
-      ua: navigator.userAgent,
-      url: encodeURI(location.href) || 'adop.com',
-      domain: encodeURI(location.hostname) || 'test.domain'
+      time_out_start: 2,
+      time_out_message: 5,
+      position: 't-r',
     }
 
-    this.maxCount = 3
-    this.baseUrl = '//inpage.eu.adopexchange.com'
+    this.baseUrl = '//settings.zone.adopexchange.com'
     this.container = null
 
     this.config = this.extend(this.config, params || {})
@@ -23,7 +19,7 @@ export default class AdopInPagePush {
   init() {
     this.log(this.config)
     this.appendStyle()
-    setTimeout(() => this.getAds(), this.config.timeOutStart * 1000)
+    setTimeout(() => this.getAds(), this.config.time_out_start * 1000)
   }
 
   extend(defaults, options) {
@@ -35,7 +31,7 @@ export default class AdopInPagePush {
       }
     }
     for (prop in options) {
-      if (Object.prototype.hasOwnProperty.call(options, prop)) {
+      if (Object.prototype.hasOwnProperty.call(options, prop) && options[prop] != null) {
         extended[prop] = options[prop]
       }
     }
@@ -48,6 +44,12 @@ export default class AdopInPagePush {
 
   isDebugMode() {
     return this.config.debug === true
+  }
+
+  position() {
+    return this.config.position ?
+        'adoperator_' + this.config.position
+        : 'adoperator_t-r'
   }
 
   http_build_query(jsonObj) {
@@ -80,7 +82,7 @@ export default class AdopInPagePush {
 
   appendContainer() {
     this.container = document.createElement('div')
-    this.container.className = 'adoperator_inp_container'
+    this.container.className = 'adoperator_inp_container ' + this.position()
     document.body.appendChild(this.container)
     return this.container
   }
@@ -102,7 +104,7 @@ export default class AdopInPagePush {
 
     for (const key in data) {
       this.showAd(data[key])
-      await this.sleep(this.config.timeOutMessage * 1000)
+      await this.sleep(this.config.time_out_message * 1000)
     }
   }
 
@@ -112,7 +114,7 @@ export default class AdopInPagePush {
     this.getContainer().appendChild(block)
     setTimeout(() => {
       block.className = 'adoperator_inp adoperator_inp--active'
-    }, 0)
+    }, 1)
   }
 
   createAdBlock(data) {
@@ -134,42 +136,29 @@ export default class AdopInPagePush {
   }
 
   getAds() {
-    if (!this.config.subId || !this.config.feedId) {
-      this.log('feedId and subId required!')
-      return
-    }
-
-    if (this.config.count > this.maxCount) {
-      this.log('"count" should not exceed ' + maxCount)
-      return
-    }
-
     var xhr = new XMLHttpRequest()
 
     let query = {
-      feedid: this.config.feedId,
-      subId: this.config.subId,
-      ua: this.config.ua,
-      count: this.config.count,
-      format: 'json',
-      keywords: 'best,price',
-      url: this.config.url,
-      domain: this.config.domain
+      zone: this.config.zone,
     }
 
     this.log(query)
 
     query = this.http_build_query(query)
 
-    xhr.open('GET', this.baseUrl + '/rtb/search/inpage?' + query, true)
+    xhr.open('GET', this.baseUrl + '/api/v1/settings?' + query, true)
 
     xhr.onreadystatechange = x => {
       const response = x.target
 
       if (response.readyState === 4) {
-        if (response.status == 200) {
+        if (response.status === 200) {
           try {
-            this.response(JSON.parse(response.responseText))
+            let resp = JSON.parse(response.responseText);
+
+            this.config = this.extend(this.config, resp.settings || {})
+
+            this.response(JSON.parse(resp.bidResponse))
           } catch (error) {
             this.log(error)
           }
@@ -184,16 +173,47 @@ export default class AdopInPagePush {
     return `.adoperator_inp_container {
       position: fixed;
       z-index: 99999999999;
-      right: 0;
-      top: 5%;
       width: 333px;
       overflow: hidden;
     }
+    .adoperator_t-r {
+      right: 0;
+      top: 5%;
+    }
+    .adoperator_t-l {
+      left: 0;
+      top: 5%;
+    }
+    .adoperator_b-r {
+      right: 0;
+      bottom: 5%;
+    }
+    .adoperator_b-l {
+      left: 0;
+      bottom: 5%;
+    }
+    .adoperator_t-l > .adoperator_inp,
+    .adoperator_b-l > .adoperator_inp {
+      left: -335px;
+      margin-left: 15px;
+     }
+    .adoperator_t-r > .adoperator_inp,
+    .adoperator_b-r > .adoperator_inp {
+      right: -335px;
+      margin-right: 15px;
+     }
+    .adoperator_t-l > .adoperator_inp--active,
+    .adoperator_b-l > .adoperator_inp--active {
+      left: -5px;
+     }
+    .adoperator_t-r > .adoperator_inp--active,
+    .adoperator_b-r > .adoperator_inp--active {
+      right: -5px;
+     }
     .adoperator_inp {
       position: relative;
       z-index: 999999;
       width: 310px;
-      right: -335px;
       margin-bottom: 15px;
       min-height: 72px;
       background-color: #fff;
@@ -214,10 +234,6 @@ export default class AdopInPagePush {
       -moz-transition-timing-function: cubic-bezier(0.735, 0.16, 0.38, 1.58);
       -o-transition-timing-function: cubic-bezier(0.735, 0.16, 0.38, 1.58);
       transition-timing-function: cubic-bezier(0.735, 0.16, 0.38, 1.58);
-    }
-    
-    .adoperator_inp.adoperator_inp--active {
-      right: -5px;
     }
     
     .adoperator_inp a {
@@ -252,7 +268,7 @@ export default class AdopInPagePush {
       background-size: contain;
       background-repeat: no-repeat;
       width: 72px;
-      max-height: 72px;
+      height: 72px;
       margin-right: 8px;
       display: inline-block;
       vertical-align: middle;
