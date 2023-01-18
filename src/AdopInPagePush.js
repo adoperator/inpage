@@ -6,7 +6,7 @@ export default class AdopInPagePush {
       count: 3,
       time_out_start: 2,
       time_out_message: 5,
-      rerun_time: 3,
+      rerun_time: 0,
       position: 't-r',
     }
 
