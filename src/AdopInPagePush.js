@@ -11,7 +11,7 @@ export default class AdopInPagePush {
 
     this.inShow = 0
 
-    this.baseUrl = '//settings.zone.adopexchange.com'
+    this.baseUrl = 'https://zone.adopexchange.com'
     this.container = null
 
     this.config = this.extend(this.config, params || {})
