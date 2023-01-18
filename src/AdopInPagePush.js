@@ -6,11 +6,10 @@ export default class AdopInPagePush {
       count: 3,
       time_out_start: 2,
       time_out_message: 5,
-      rerun_time: 5,
       position: 't-r',
     }
 
-    this.adList = []
+    this.inShow = 0
 
     this.baseUrl = '//settings.zone.adopexchange.com'
     this.container = null
@@ -105,6 +104,8 @@ export default class AdopInPagePush {
       return
     }
 
+    this.inShow += data.length
+
     for (const key in data) {
       this.showAd(data[key])
       await this.sleep(this.config.time_out_message * 1000)
@@ -124,12 +125,19 @@ export default class AdopInPagePush {
     let close = document.createElement('span')
     close.className = 'adoperator_inp--close'
     close.onclick = () => {
-      document.getElementById(data.id).classList.remove("adoperator_inp--active")
-      if (this.config.rerun_time > 0) {
-        setTimeout(() => {
-          this.getAds()
-        }, this.config.rerun_time * 1000)
-      }
+      this.inShow--
+
+      let ad = document.getElementById(data.id)
+      ad.classList.remove("adoperator_inp--active")
+      this.sleep(500).then(() => ad.remove())
+
+      new Promise(resolve => {
+        if (this.inShow === 0) {
+          resolve()
+        }
+      }).then(() => {
+        this.sleep(this.config.time_out_message * 1000).then(() => this.getAds())
+      })
     }
     close.innerHTML = 'x'
 
