@@ -188,7 +188,7 @@ export default class AdopInPagePush {
 
             this.log(this.config)
 
-            this.response(JSON.parse(resp.bidResponse))
+            this.response(resp.bidResponse)
           } catch (error) {
             this.log(error)
           }
