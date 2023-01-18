@@ -6,9 +6,11 @@ export default class AdopInPagePush {
       count: 3,
       time_out_start: 2,
       time_out_message: 5,
-      rerun_time: 0,
+      rerun_time: 5,
       position: 't-r',
     }
+
+    this.adList = []
 
     this.baseUrl = '//settings.zone.adopexchange.com'
     this.container = null
@@ -103,10 +105,13 @@ export default class AdopInPagePush {
       return
     }
 
-    for (const key in data) {
-      this.showAd(data[key])
-      await this.sleep(this.config.time_out_message * 1000)
-    }
+    this.adList = data
+
+    setInterval(() => {
+      if (this.adList.length > 0) {
+        this.showAd(this.adList.pop())
+      }
+    }, this.config.time_out_message * 1000)
   }
 
   showAd(data) {
@@ -120,14 +125,13 @@ export default class AdopInPagePush {
 
   createAdBlock(data) {
     let close = document.createElement('span')
-    let rerun_time = this.config.rerun_time * 1000
     close.className = 'adoperator_inp--close'
-    close.onclick = function () {
+    close.onclick = () => {
       document.getElementById(data.id).classList.remove("adoperator_inp--active")
-      if (rerun_time > 0) {
-        setTimeout(function () {
-          document.getElementById(data.id).classList.add("adoperator_inp--active")
-        }, rerun_time)
+      if (this.config.rerun_time > 0) {
+        setTimeout(() => {
+          this.getAds()
+        }, this.config.rerun_time * 1000)
       }
     }
     close.innerHTML = 'x'
