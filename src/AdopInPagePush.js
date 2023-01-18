@@ -131,13 +131,9 @@ export default class AdopInPagePush {
       ad.classList.remove("adoperator_inp--active")
       this.sleep(500).then(() => ad.remove())
 
-      new Promise(resolve => {
-        if (this.inShow === 0) {
-          resolve()
-        }
-      }).then(() => {
+      if (this.inShow === 0) {
         this.sleep(this.config.time_out_message * 1000).then(() => this.getAds())
-      })
+      }
     }
     close.innerHTML = 'x'
 
