@@ -163,6 +163,11 @@ export default class AdopInPagePush {
   }
 
   getAds() {
+    if (!this.config.zone) {
+      this.log('"zone" is required field')
+      return
+    }
+
     var xhr = new XMLHttpRequest()
 
     let query = {
