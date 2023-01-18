@@ -6,6 +6,7 @@ export default class AdopInPagePush {
       count: 3,
       time_out_start: 2,
       time_out_message: 5,
+      rerun_time: 3,
       position: 't-r',
     }
 
@@ -118,19 +119,36 @@ export default class AdopInPagePush {
   }
 
   createAdBlock(data) {
-    let block = document.createElement('div')
+    let close = document.createElement('span')
+    let rerun_time = this.config.rerun_time * 1000
+    close.className = 'adoperator_inp--close'
+    close.onclick = function () {
+      document.getElementById(data.id).classList.remove("adoperator_inp--active")
+      if (rerun_time > 0) {
+        setTimeout(function () {
+          document.getElementById(data.id).classList.add("adoperator_inp--active")
+        }, rerun_time)
+      }
+    }
+    close.innerHTML = 'x'
 
-    block.id = data.id
-    block.className = 'adoperator_inp'
-    block.innerHTML = `
-    <span class="adoperator_inp--close" onclick=\'document.getElementById("${data.id}").classList.remove("adoperator_inp--active")\'>x</span>
-    <a href="${data.click_url}" target="_blank" rel="noopener noreferrer">
-      <div class="adoperator_inp--img" style="background-image:url(${data.icon_url})"></div>
-      <div class="adoperator_inp--desc">
+    let ad = document.createElement('a')
+    ad.href = data.click_url
+    ad.target = '_blank'
+    ad.rel = 'noopener noreferrer'
+    ad.innerHTML = `
+    <div class="adoperator_inp--img" style="background-image:url(${data.icon_url})"></div>
+    <div class="adoperator_inp--desc">
       <p>${data.title}</p>
       <span>${data.text || ''}</span>
-      </div>
-    </a>`
+    </div>`
+
+    let block = document.createElement('div')
+    block.id = data.id
+    block.className = 'adoperator_inp'
+
+    block.appendChild(close)
+    block.appendChild(ad)
 
     return block
   }
@@ -157,6 +175,8 @@ export default class AdopInPagePush {
             let resp = JSON.parse(response.responseText);
 
             this.config = this.extend(this.config, resp.settings || {})
+
+            this.log(this.config)
 
             this.response(JSON.parse(resp.bidResponse))
           } catch (error) {
