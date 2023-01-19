@@ -49,9 +49,17 @@ export default class AdopInPagePush {
   }
 
   position() {
-    return this.config.position ?
-        'adoperator_' + this.config.position
-        : 'adoperator_t-r'
+    const POSITIONS = ['t-l', 't-r', 'b-l', 'b-r']
+
+    let positions = JSON.parse(this.config.position).filter((p) => POSITIONS.includes(p))
+
+    if (positions.length === 0) {
+      positions = POSITIONS
+    }
+
+    let target = positions[Math.floor(Math.random() * positions.length)]
+
+    return 'adoperator_' + target
   }
 
   http_build_query(jsonObj) {
