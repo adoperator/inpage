@@ -9,8 +9,10 @@ export default class AdopInPagePush {
       position: 't-r',
     }
 
+    this.totalShow = 0
     this.inShow = 0
-
+    this.originalTitle = document.title
+    this.titleInteravl = null;
     this.baseUrl = 'https://zone.adopexchange.com'
     this.container = null
 
@@ -49,9 +51,17 @@ export default class AdopInPagePush {
   }
 
   position() {
-    return this.config.position ?
-        'adoperator_' + this.config.position
-        : 'adoperator_t-r'
+    const POSITIONS = ['t-l', 't-r', 'b-l', 'b-r']
+
+    let positions = JSON.parse(this.config.position).filter((p) => POSITIONS.includes(p))
+
+    if (positions.length === 0) {
+      positions = POSITIONS
+    }
+
+    let target = positions[Math.floor(Math.random() * positions.length)]
+
+    return 'adoperator_' + target
   }
 
   http_build_query(jsonObj) {
@@ -104,7 +114,7 @@ export default class AdopInPagePush {
       return
     }
 
-    this.inShow += data.length
+    this.totalShow += data.length
 
     for (const key in data) {
       this.showAd(data[key])
@@ -119,19 +129,45 @@ export default class AdopInPagePush {
     setTimeout(() => {
       block.className = 'adoperator_inp adoperator_inp--active'
     }, 1)
+    this.inShow++;
+    this.updateTitle()
+  }
+
+  updateTitle() {
+    this.clearTitle()
+
+    let message = `New message (${this.inShow})`
+    let original = this.originalTitle
+    let i = 0;
+
+    document.title = message
+
+    this.titleInteravl = setInterval(function () {
+      document.title = !(i % 2) ? original : message
+      i++
+    }, 2000)
+  }
+
+  clearTitle() {
+    clearInterval(this.titleInteravl)
+    document.title = this.originalTitle
   }
 
   createAdBlock(data) {
     let close = document.createElement('span')
     close.className = 'adoperator_inp--close'
     close.onclick = () => {
+      this.totalShow--
+
       this.inShow--
+      this.updateTitle()
 
       let ad = document.getElementById(data.id)
       ad.classList.remove("adoperator_inp--active")
       this.sleep(500).then(() => ad.remove())
 
-      if (this.inShow === 0) {
+      if (this.totalShow === 0) {
+        this.clearTitle()
         this.sleep(this.config.time_out_message * 1000).then(() => this.getAds())
       }
     }
