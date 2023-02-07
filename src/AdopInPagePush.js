@@ -123,14 +123,19 @@ export default class AdopInPagePush {
   }
 
   showAd(data) {
-    this.log('showAd: ' + data.id)
-    let block = this.createAdBlock(data)
-    this.getContainer().appendChild(block)
+    this.preload(data).then((block) => {
+      this.log('showAd: ' + data.id)
+      this.getContainer().appendChild(block)
+      this.activateAd(block)
+    })
+  }
+
+  activateAd(ad) {
     setTimeout(() => {
-      block.className = 'adoperator_inp adoperator_inp--active'
-    }, 1)
-    this.inShow++;
-    this.updateTitle()
+      ad.className = 'adoperator_inp adoperator_inp--active'
+      this.inShow++;
+      this.updateTitle()
+    }, 10)
   }
 
   updateTitle() {
@@ -153,45 +158,57 @@ export default class AdopInPagePush {
     document.title = this.originalTitle
   }
 
-  createAdBlock(data) {
-    let close = document.createElement('span')
-    close.className = 'adoperator_inp--close'
-    close.onclick = () => {
-      this.totalShow--
+  preload(data) {
+    return new Promise((resolve, reject) => {
+      const image = new Image();
+      image.className = 'adoperator_inp--img'
+      image.alt = '';
+      image.src = data.icon_url
 
-      this.inShow--
-      this.updateTitle()
+      image.onload = () => {
+        let close = document.createElement('span')
+        close.className = 'adoperator_inp--close'
+        close.onclick = () => {
+          this.totalShow--
 
-      let ad = document.getElementById(data.id)
-      ad.classList.remove("adoperator_inp--active")
-      this.sleep(500).then(() => ad.remove())
+          this.inShow--
+          this.updateTitle()
 
-      if (this.totalShow === 0) {
-        this.clearTitle()
-        this.sleep(this.config.time_out_message * 1000).then(() => this.getAds())
-      }
-    }
-    close.innerHTML = 'x'
+          let ad = document.getElementById(data.id)
+          ad.classList.remove("adoperator_inp--active")
+          this.sleep(500).then(() => ad.remove())
 
-    let ad = document.createElement('a')
-    ad.href = data.click_url
-    ad.target = '_blank'
-    ad.rel = 'noopener noreferrer'
-    ad.innerHTML = `
-    <div class="adoperator_inp--img" style="background-image:url(${data.icon_url})"></div>
-    <div class="adoperator_inp--desc">
-      <p>${data.title}</p>
-      <span>${data.text || ''}</span>
-    </div>`
+          if (this.totalShow === 0) {
+            this.clearTitle()
+            this.sleep(this.config.time_out_message * 1000).then(() => this.getAds())
+          }
+        }
+        close.innerHTML = 'x'
 
-    let block = document.createElement('div')
-    block.id = data.id
-    block.className = 'adoperator_inp'
+        let ad = document.createElement('a')
+        ad.href = data.click_url
+        ad.target = '_blank'
+        ad.rel = 'noopener noreferrer'
 
-    block.appendChild(close)
-    block.appendChild(ad)
+        let desc = document.createElement('div')
+        desc.className = 'adoperator_inp--desc'
+        desc.innerHTML = `
+          <p>${data.title}</p>
+          <span>${data.text || ''}</span>`
 
-    return block
+        ad.appendChild(image)
+        ad.appendChild(desc)
+
+        let block = document.createElement('div')
+        block.id = data.id
+        block.className = 'adoperator_inp'
+
+        block.appendChild(close)
+        block.appendChild(ad)
+
+        resolve(block);
+      };
+    })
   }
 
   getAds() {
