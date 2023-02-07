@@ -126,13 +126,13 @@ export default class AdopInPagePush {
     this.preload(data).then((block) => {
       this.log('showAd: ' + data.id)
       this.getContainer().appendChild(block)
-      this.activateAd(block)
+      this.activateBlock(block)
     })
   }
 
-  activateAd(ad) {
+  activateBlock(block) {
     setTimeout(() => {
-      ad.className = 'adoperator_inp adoperator_inp--active'
+      block.className = 'adoperator_inp adoperator_inp--active'
       this.inShow++;
       this.updateTitle()
     }, 10)
