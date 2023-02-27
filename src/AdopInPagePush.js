@@ -16,7 +16,7 @@ export default class AdopInPagePush {
     this.inShow = 0
 
     this.originalTitle = document.title
-    this.titleInterval = null;
+    this.titleInterval = null
 
     this.baseUrl = 'https://zone.adopexchange.com'
     this.container = null
@@ -36,7 +36,7 @@ export default class AdopInPagePush {
       'small',
       // 'large',
       'overlay'
-    ];
+    ]
 
     let formats = JSON.parse(this.config.format).filter((p) => FORMATS.includes(p))
 
@@ -165,7 +165,7 @@ export default class AdopInPagePush {
   activateBlock(block) {
     setTimeout(() => {
       block.classList.add('adoperator_inp--active')
-      this.inShow++;
+      this.inShow++
       this.updateTitle()
     }, 10)
   }
@@ -185,7 +185,7 @@ export default class AdopInPagePush {
 
     let message = `New message (${this.inShow})`
     let original = this.originalTitle
-    let i = 0;
+    let i = 0
 
     document.title = message
 
@@ -202,9 +202,9 @@ export default class AdopInPagePush {
 
   preload(data) {
     return new Promise((resolve, reject) => {
-      let image = new Image();
+      let image = new Image()
       image.className = 'adoperator_inp--img'
-      image.alt = '';
+      image.alt = ''
       image.src = data.icon_url
       image.onload = () => {
         let close = this.getCloseElement(data)
@@ -258,7 +258,7 @@ export default class AdopInPagePush {
       if (response.readyState === 4) {
         if (response.status === 200) {
           try {
-            let resp = JSON.parse(response.responseText);
+            let resp = JSON.parse(response.responseText)
 
             this.config = this.extend(this.config, resp.settings || {})
 
