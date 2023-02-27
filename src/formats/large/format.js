@@ -20,9 +20,7 @@ class Format extends BaseFormat {
 
       let desc = document.createElement('div')
       desc.className = 'adoperator_inp--desc'
-      desc.innerHTML = `
-          <p>${data.title}</p>
-          <span>${data.text || ''}</span>`
+      desc.innerHTML = `<p>${data.title}</p><span>${data.text || ''}</span>`
 
       ad.appendChild(desc)
 
