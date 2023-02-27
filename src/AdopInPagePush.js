@@ -16,7 +16,7 @@ export default class AdopInPagePush {
     this.inShow = 0
 
     this.originalTitle = document.title
-    this.titleInteraval = null;
+    this.titleInterval = null;
 
     this.baseUrl = 'https://zone.adopexchange.com'
     this.container = null
@@ -189,14 +189,14 @@ export default class AdopInPagePush {
 
     document.title = message
 
-    this.titleInteraval = setInterval(function () {
+    this.titleInterval = setInterval(function () {
       document.title = !(i % 2) ? original : message
       i++
     }, 2000)
   }
 
   clearTitle() {
-    clearInterval(this.titleInteraval)
+    clearInterval(this.titleInterval)
     document.title = this.originalTitle
   }
 
