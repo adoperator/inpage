@@ -18,7 +18,7 @@ export default class AdopInPagePush {
     this.originalTitle = document.title
     this.titleInterval = null
 
-    this.baseUrl = 'https://zone.adopexchange.com'
+    this.baseUrl = 'https://ssdwinz.dawirax.com'
     this.container = null
 
     this.config = this.extend(this.config, params || {})
