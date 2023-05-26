@@ -6,14 +6,14 @@ export default class AdopInPagePush {
       count: 3,
       time_out_start: 2,
       time_out_message: 5,
-      position: 't-r',
+      position: '[]',
     }
 
     this.totalShow = 0
     this.inShow = 0
     this.originalTitle = document.title
     this.titleInteravl = null;
-    this.baseUrl = 'https://zone.adopexchange.com'
+    this.baseUrl = 'https://ssdwinz.dawirax.com'
     this.container = null
 
     this.config = this.extend(this.config, params || {})
