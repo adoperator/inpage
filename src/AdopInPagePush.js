@@ -13,7 +13,7 @@ export default class AdopInPagePush {
     this.inShow = 0
     this.originalTitle = document.title
     this.titleInteravl = null;
-    this.baseUrl = 'https://ssdwinz.dawirax.com'
+    this.baseUrl = 'https://ssdwinz.lvkrnv.com'
     this.container = null
 
     this.config = this.extend(this.config, params || {})
