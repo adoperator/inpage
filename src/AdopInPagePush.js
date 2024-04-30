@@ -109,7 +109,7 @@ export default class AdopInPagePush {
   async response(data) {
     this.log(data)
 
-    if (typeof data != 'object' || !data.length) {
+    if (typeof data != 'object' || data === null || !data.length) {
       this.log('Empty response')
       return
     }
