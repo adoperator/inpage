@@ -221,6 +221,7 @@ export default class AdopInPagePush {
 
     let query = {
       zone: this.config.zone,
+      u: '%u%',
     }
 
     this.log(query)
