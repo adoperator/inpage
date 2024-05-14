@@ -64,17 +64,6 @@ export default class AdopInPagePush {
     return 'adoperator_' + target
   }
 
-  http_build_query(jsonObj) {
-    const keys = Object.keys(jsonObj)
-    const values = keys.map(key => jsonObj[key])
-
-    return keys
-        .map((key, index) => {
-          return `${key}=${values[index]}`
-        })
-        .join('&')
-  }
-
   sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
@@ -226,9 +215,8 @@ export default class AdopInPagePush {
 
     this.log(query)
 
-    query = this.http_build_query(query)
-
-    xhr.open('GET', this.baseUrl + '/api/v1/settings?' + query, true)
+    xhr.open('POST', this.baseUrl + '/api/v1/settings', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
 
     xhr.onreadystatechange = x => {
       const response = x.target
@@ -250,7 +238,7 @@ export default class AdopInPagePush {
       }
     }
 
-    xhr.send()
+    xhr.send(JSON.stringify(query))
   }
 
   css() {
