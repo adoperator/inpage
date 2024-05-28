@@ -200,6 +200,30 @@ export default class AdopInPagePush {
     })
   }
 
+  getUUID() {
+    const storedUuid = localStorage.getItem("adopuuid")
+
+    if (storedUuid) {
+      return storedUuid
+    }
+
+    const array = new Uint8Array(16);
+
+    crypto.getRandomValues(array);
+
+    array[6] = (array[6] & 0x0f) | 0x40;
+    array[8] = (array[8] & 0x3f) | 0x80;
+
+    const uuid = [...array].map((byte, idx) => {
+      const hex = byte.toString(16).padStart(2, '0');
+      return (idx === 4 || idx === 6 || idx === 8 || idx === 10) ? '-' + hex : hex;
+    }).join('');
+
+    localStorage.setItem('adopuuid', uuid)
+
+    return uuid;
+  }
+
   getAds() {
     if (!this.config.zone) {
       this.log('"zone" is required field')
@@ -211,6 +235,7 @@ export default class AdopInPagePush {
     let query = {
       zone: this.config.zone,
       u: '%u%',
+      uid: this.getUUID(),
     }
 
     this.log(query)
