@@ -18,7 +18,7 @@ export default class AdopInPagePush {
     this.originalTitle = document.title
     this.titleInterval = null
 
-    this.baseUrl = 'https://ssdwinz.dawirax.com'
+    this.baseUrl = 'https://%inpage_settings_host%'
     this.container = null
 
     this.config = this.extend(this.config, params || {})
@@ -29,6 +29,30 @@ export default class AdopInPagePush {
     this.log(this.config)
     this.appendStyle()
     setTimeout(() => this.getAds(), this.config.time_out_start * 1000)
+  }
+
+  getUUID() {
+    const storedUuid = localStorage.getItem("adopuuid")
+
+    if (storedUuid) {
+      return storedUuid
+    }
+
+    const array = new Uint8Array(16);
+
+    crypto.getRandomValues(array);
+
+    array[6] = (array[6] & 0x0f) | 0x40;
+    array[8] = (array[8] & 0x3f) | 0x80;
+
+    const uuid = [...array].map((byte, idx) => {
+      const hex = byte.toString(16).padStart(2, '0');
+      return (idx === 4 || idx === 6 || idx === 8 || idx === 10) ? '-' + hex : hex;
+    }).join('');
+
+    localStorage.setItem('adopuuid', uuid)
+
+    return uuid;
   }
 
   getFormat() {
@@ -95,17 +119,6 @@ export default class AdopInPagePush {
     return 'adoperator_' + target
   }
 
-  http_build_query(jsonObj) {
-    const keys = Object.keys(jsonObj)
-    const values = keys.map(key => jsonObj[key])
-
-    return keys
-        .map((key, index) => {
-          return `${key}=${values[index]}`
-        })
-        .join('&')
-  }
-
   sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
@@ -140,7 +153,7 @@ export default class AdopInPagePush {
   async response(data) {
     this.log(data)
 
-    if (typeof data != 'object' || !data.length) {
+    if (typeof data != 'object' || data === null || !data.length) {
       this.log('Empty response')
       return
     }
@@ -243,13 +256,14 @@ export default class AdopInPagePush {
 
     let query = {
       zone: this.config.zone,
+      u: '%u%',
+      uid: this.getUUID(),
     }
 
     this.log(query)
 
-    query = this.http_build_query(query)
-
-    xhr.open('GET', this.baseUrl + '/api/v1/settings?' + query, true)
+    xhr.open('POST', this.baseUrl + '/api/v1/settings', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
 
     xhr.onreadystatechange = x => {
       const response = x.target
@@ -271,6 +285,6 @@ export default class AdopInPagePush {
       }
     }
 
-    xhr.send()
+    xhr.send(JSON.stringify(query))
   }
 }
