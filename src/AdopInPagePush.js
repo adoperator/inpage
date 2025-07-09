@@ -262,29 +262,52 @@ export default class AdopInPagePush {
 
     this.log(query)
 
-    xhr.open('POST', this.baseUrl + '/api/v1/settings', true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-
-    xhr.onreadystatechange = x => {
-      const response = x.target
-
-      if (response.readyState === 4) {
-        if (response.status === 200) {
-          try {
-            let resp = JSON.parse(response.responseText);
-
-            this.config = this.extend(this.config, resp.settings || {})
-
-            this.log(this.config)
-
-            this.response(resp.bidResponse)
-          } catch (error) {
-            this.log(error)
+    if (this.isDebugMode()) {
+      let resp = {
+        "bidResponse": [
+          {
+            "title": "Test title!",
+            "nurl": "https://adoperator.com",
+            "icon_url": "https://store-v2.adoperator.com/ads/25/04/88060f70636da84d192.jpeg",
+            "text": "Test ad message!",
+            "dsp": "TEST_DSP",
+            "category": "1",
+            "campaign_id": 1,
+            "click_url": "https://adoperator.com",
+            "cpc": 0.0004666667,
+            "image_url": "https://store-v2.adoperator.com/ads/25/04/88060f70636da84d192.jpeg",
+            "id": "12345678-1234-1234-1234-1234567890"
+          }
+        ],
+        "settings": {
+          "count": "1",
+          "timeOutStart": "2",
+          "timeOutMessage": "3",
+          "position": "[]"
+        }
+      };
+      this.config = this.extend(this.config, resp.settings || {})
+      this.log(this.config)
+      this.response(resp.bidResponse)
+    } else {
+      xhr.open('POST', this.baseUrl + '/api/v1/settings', true);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.onreadystatechange = x => {
+        const response = x.target
+        if (response.readyState === 4) {
+          if (response.status === 200) {
+            try {
+              let resp = JSON.parse(response.responseText);
+              this.config = this.extend(this.config, resp.settings || {})
+              this.log(this.config)
+              this.response(resp.bidResponse)
+            } catch (error) {
+              this.log(error)
+            }
           }
         }
       }
+      xhr.send(JSON.stringify(query))
     }
-
-    xhr.send(JSON.stringify(query))
   }
 }
