@@ -51,7 +51,7 @@ class Format extends BaseFormat {
 
         let overlay = document.createElement('div')
         overlay.id = data.id
-        overlay.className = 'adoperator_inp adoperator_overlay'
+        overlay.className = 'adoperator_inp'
 
         overlay.appendChild(block)
 

@@ -2,7 +2,7 @@
     position: fixed;
     z-index: 99999999999;
 }
-.adoperator_overlay {
+.adoperator_inp {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -11,6 +11,11 @@
     position: fixed;
     z-index: 99999999999;
     background: rgba(33, 33, 33, 0.73);
+    opacity: 0;
+    transition: 1s opacity;
+}
+.adoperator_inp--active {
+    opacity: 1;
 }
 .adoperator_block {
     position: relative;
