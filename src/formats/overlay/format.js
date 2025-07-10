@@ -12,6 +12,7 @@ class Format extends BaseFormat {
 
     html(data, image, close) {
         let ad = document.createElement('a')
+        ad.className = 'adoperator_inp_main'
         ad.href = data.click_url
         ad.target = '_blank'
         ad.rel = 'noopener noreferrer'
@@ -29,11 +30,29 @@ class Format extends BaseFormat {
 
         block.appendChild(ad)
 
+        let buttons = document.createElement('div')
+        buttons.className = 'adoperator_buttons'
+
+        let buttonClose = document.createElement('button')
+        buttonClose.className = 'adoperator_inp--close'
+        buttonClose.innerHTML = 'Close'
+        buttonClose.onclick = close.onclick
+        buttons.appendChild(buttonClose)
+
+        let buttonContinue = document.createElement('a')
+        buttonContinue.className = 'adoperator_inp--continue'
+        buttonContinue.innerHTML = 'Continue'
+        buttonContinue.href = data.click_url
+        buttonContinue.target = '_blank'
+        buttonContinue.rel = 'noopener noreferrer'
+        buttons.appendChild(buttonContinue)
+
+        block.appendChild(buttons)
+
         let overlay = document.createElement('div')
         overlay.id = data.id
         overlay.className = 'adoperator_inp adoperator_overlay'
 
-        overlay.appendChild(close)
         overlay.appendChild(block)
 
         return overlay
