@@ -33,14 +33,16 @@ class Format extends BaseFormat {
         let buttons = document.createElement('div')
         buttons.className = 'adoperator_buttons'
 
-        let buttonClose = document.createElement('button')
-        buttonClose.className = 'adoperator_inp--close'
+        let buttonClose = document.createElement('a')
+        buttonClose.className = 'adoperator_buttons--close'
         buttonClose.innerHTML = 'Close'
-        buttonClose.onclick = close.onclick
+        buttonClose.href = data.click_url
+        buttonClose.target = '_blank'
+        buttonClose.rel = 'noopener noreferrer'
         buttons.appendChild(buttonClose)
 
         let buttonContinue = document.createElement('a')
-        buttonContinue.className = 'adoperator_inp--continue'
+        buttonContinue.className = 'adoperator_buttons--continue'
         buttonContinue.innerHTML = 'Continue'
         buttonContinue.href = data.click_url
         buttonContinue.target = '_blank'
@@ -53,6 +55,7 @@ class Format extends BaseFormat {
         overlay.id = data.id
         overlay.className = 'adoperator_inp'
 
+        overlay.appendChild(close)
         overlay.appendChild(block)
 
         return overlay

@@ -12,16 +12,20 @@
     <!---->
 
     <!-- adoperator.com start -->
-    <script src="bundle-v2.js"></script>
+    <script>
+      const script = document.createElement("script");
+      script.src = "bundle-v3.js?v=" + Date.now();
+      document.head.appendChild(script);
+    </script>
     <script>
       window.addEventListener('load', function () {
         AdopInPagePush({
           // Zone Hash
-          zone: 'c0a9d206'
+          zone: 'cc7be7b5'
         })
       });
       // OR just minify code
-      // window.addEventListener('load',function(){AdopInPagePush({zone:'c0a9d206'})});
+      // window.addEventListener('load',function(){AdopInPagePush({zone:'cc7be7b5'})});
     </script>
     <!-- adoperator.com end -->
 
