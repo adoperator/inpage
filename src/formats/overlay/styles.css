@@ -1,6 +1,8 @@
 .adoperator_inp_container {
     position: fixed;
     z-index: 99999999999;
+    top: 0;
+    left: 0;
 }
 .adoperator_inp {
     display: flex;
@@ -42,12 +44,29 @@
     gap: 15px;
     padding: 10px;
 }
+.adoperator_inp .adoperator_inp--close {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    background-color: #c5c5c5;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    height: 16px;
+    width: 16px;
+    font-size: 12px;
+    line-height: 14px;
+    color: #fff;
+    text-align: center;
+    z-index: 99999;
+    cursor: pointer;
+}
 .adoperator_inp .adoperator_buttons {
     display: flex;
     justify-content: space-between;
     gap: 8px;
 }
-.adoperator_inp .adoperator_inp--close {
+.adoperator_inp .adoperator_buttons--close {
     width: 40%;
     padding: 5px 15px;
     border-radius: 10px;
@@ -56,8 +75,9 @@
     color: #353535;
     border: 1px solid #dfdfdf;
     text-align: center;
+    text-decoration: none;
 }
-.adoperator_inp .adoperator_inp--continue {
+.adoperator_inp .adoperator_buttons--continue {
     width: 60%;
     padding: 5px 15px;
     border-radius: 10px;
@@ -65,6 +85,7 @@
     background-color: #0499ff;
     color: #ffffff;
     text-align: center;
+    text-decoration: none;
 }
 .adoperator_inp .adoperator_inp--img {
     background-image: none;
