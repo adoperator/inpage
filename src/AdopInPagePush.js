@@ -33,7 +33,7 @@ export default class AdopInPagePush {
 
   getFormat() {
     let FORMATS = [
-      'small',
+      // 'small',
       'overlay'
     ]
 
